@@ -1,7 +1,3 @@
 <template>
-  <PortfolioHome />
+  <RouterView />
 </template>
-
-<script setup>
-import PortfolioHome from './views/PortfolioHome.vue'
-</script>

@@ -80,13 +80,11 @@
         </div>
         <div class="awards-list">
           <!-- 第一個獎項 -->
-          <a
+          <div
             v-for="(award, index) in awards"
             :key="award.id"
-            :href="award.link"
-            target="_blank"
-            rel="noopener noreferrer"
             class="award-row"
+            @click="router.push(`/awards/${award.id}`)"
             >
             <div class="award-cover">
               <img v-if="award.image" :src="award.image" :alt="award.title" class="award-img" />
@@ -106,7 +104,7 @@
             <!-- <div class="award-badge">
               <span class="award-link-hint">VIEW →</span>
             </div> -->
-          </a>
+          </div>
         </div>
       </div>
     </section>
@@ -198,6 +196,8 @@
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 
 const pageLoaded = ref(false)
 const splineLoaded = ref(false)
@@ -216,7 +216,7 @@ const projects = reactive([
   {
     id: 1,
     title: 'Momento郵寄遊記｜外國旅台紀念服務',
-    category: 'INTERACTION DESIGN',
+    category: 'PRODUCT DESIGN',
     year: '2026',
     emoji: '🛋️',
     color: '#e8ddd4',
@@ -226,12 +226,12 @@ const projects = reactive([
     // ★ 換成你的外部連結
     link: 'https://reurl.cc/R28pqx',
     description: '一款讓外國旅客在台灣旅途中記錄旅程、生成專屬明信片並寄回家鄉的個人化旅行記憶服務，此網址為高保真互動模型，探索數位與實體連結的可能性。',
-    tags: ['Spline', 'Vue 3', '3D Design', 'Interaction'],
+    tags: ['Figma', 'Vue 3', 'User Research', '遊記郵寄服務', '線上轉線下'],
   },
   {
     id: 2,
-    title: 'CloudBOX 雲端裡的潘朵拉｜工藝觀察筆記',
-    category: 'UI/UX DESIGN',
+    title: 'CloudBOX 雲端裡的潘朵拉｜工藝觀察',
+    category: 'UIUX DESIGN．前端切版',
     year: '2026',
     emoji: '🌱',
     color: '#d4e8d8',
@@ -239,32 +239,32 @@ const projects = reactive([
     image: '/3D_SP/img/cloud_box.png',
     link: 'https://skyun62.github.io/CloudBOX/',
     description: '古老神話說，那個盒子裡裝著所有人類的苦與福。它裝著一個工匠的時間、一種瀕臨失傳的技藝、一塊泥土或一根纖維的前世今生。',
-    tags: ['User Research', 'Figma', 'Prototyping', 'iOS'],
+    tags: ['User Research', 'Vue 3', 'Prototyping', 'RWD'],
   },
   {
     id: 3,
-    title: '完整建置系統｜衛生福利部採購稽核系統',
+    title: '衛福部採購稽核系統｜政府大型專案建置',
     category: 'PRODUCT DESIGN',
     year: '2025',
     emoji: '🎵',
     color: '#d4d8e8',
     // image: '/images/tidewave.jpg',
     image: '/3D_SP/img/weifullboo_logo.jpg',
-    description: '以副 PM 角色深度參與需求挖掘與架構定義。針對不同行政層級設計權限分流機制，確保流程嚴謹且操作直覺。\n ⚠ 保密協議，可於面試時展示',
-    tags: ['Design System', 'Community', 'Figma', 'Research'],
+    description: '全程參與深度需求挖掘與系統架構定義，針對不同行政層級設計「權限分流機制」，確保流程嚴謹且操作直覺。\n ✅ 因保密協議關係，僅提供內部作品集展示。',
+    tags: ['Design System', 'Axure RP', 'User Research','CMS', '流程無紙化'],
   },
   {
     id: 4,
-    title: '洲際棒球場官網改版｜Side Project',
-    category: 'DASHBOARD DESIGN',
+    title: '洲際棒球場官網｜網頁改版',
+    category: 'SIDE PROJECT．RWD',
     year: '2025',
     emoji: '💡',
     color: '#e8e4d4',
     // image: '/images/luminary.jpg',
     image: '/3D_SP/img/bsball.png',
     link: 'https://fcu-11410-tibs.dev-hub.io/',
-    description: '為智慧家居設備打造統一的控制介面，平衡資訊密度與操作直覺性。',
-    tags: ['Dashboard', 'Data Viz', 'IoT', 'Vue'],
+    description: '重新針對不同客戶進行全新改版，以提升場地租借率與改善用戶體驗。',
+    tags: ['Figma', 'Vue 3', 'User Research', 'Design System', 'Business Website'],
   },
 ])
 
@@ -272,28 +272,27 @@ const skills = reactive(['UI/UX Design', 'Figma', 'Vue 3', 'Spline 3D', 'User Re
 const awards = reactive([
   {
     id: 1,
-    title: '你的獲獎作品名稱',
+    title: '嘖嘖募資上架',
     category: 'COMPETITION',
-    year: '2025',
+    year: '2022',
     emoji: '🏆',
-    // image: '/3D_SP/img/your-award.png',  // ← 換成你的圖片路徑
-    image: '',
+    image: '/3D_SP/img/zzmz.png',  // ← 換成你的圖片路徑
     link: 'https://your-award-link.com',   // ← 換成你的連結
     description: '簡短說明這個獎項的背景與你的貢獻，例如：全國設計競賽首獎，以使用者研究為核心提案。',
     tags: ['UX Research', 'Figma', 'Presentation'],
   },
   {
     id: 2,
-    title: '你',
+    title: '中草藥在地循環計劃',
     category: 'COMPETITION',
-    year: '2025',
+    year: '2021-2022',
     emoji: '🏆',
-    // image: '/3D_SP/img/your-award.png',  // ← 換成你的圖片路徑
-    image: '',
-    link: 'https://your-award-link.com',   // ← 換成你的連結
+    image: '/3D_SP/img/umus.jpg',
+    link: 'https://your-award-link.com', 
     description: '簡短說明這個獎項的背景與你的貢獻，例如：全國設計競賽首獎，以使用者研究為核心提案。',
     tags: ['UX Research', 'Figma', 'Presentation'],
   },
+  
   // 可以繼續加更多獎項...
 ])
 const stats = reactive([{ number: '20+', label: 'Projects' }, { number: '3yr', label: 'Experience' }, { number: '100%', label: 'Passion' }])
