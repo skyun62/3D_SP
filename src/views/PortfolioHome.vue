@@ -45,7 +45,7 @@
       <div class="container">
         <div class="section-header">
           <span class="section-label">SELECTED WORKS</span>
-          <h2 class="section-title">作品</h2>
+          <h2 class="section-title">專案作品</h2>
         </div>
         <div class="work-grid">
           <div v-for="(project, index) in projects" :key="project.id" class="work-card"
@@ -118,7 +118,7 @@
         <div class="about-grid">
           <div class="about-text">
             <p class="about-body">
-              我擅長從觀察中發現問題，從研究中找出脈絡，並將抽象的洞察轉化為具體的解決方案。
+              擅長從觀察中發現問題，從研究中找出脈絡，並將抽象的洞察轉化為具體的解決方案。
               <br>
               過去參與政府專案、數位產品與跨部門合作，累積了使用者研究、產品規劃與內容策略經驗。
 
@@ -155,7 +155,7 @@
     </section>
     <!-- ── Footer ── -->
     <footer class="footer">
-      <span class="footer-copy">© 2026 SKY</span>
+      <span class="footer-copy">© 2026 SKY. All rights reserved.</span>
       <div class="footer-links">
         <a href="#">104</a>
         <a href="#">LinkedIn</a>
@@ -278,8 +278,8 @@ const awards = reactive([
     emoji: '🏆',
     image: '/3D_SP/img/zzmz.png',  // ← 換成你的圖片路徑
     link: 'https://your-award-link.com',   // ← 換成你的連結
-    description: '簡短說明這個獎項的背景與你的貢獻，例如：全國設計競賽首獎，以使用者研究為核心提案。',
-    tags: ['UX Research', 'Figma', 'Presentation'],
+    description: '經過長達一年多的顧客調研與競賽，將產品順利產出並成功上架平台。',
+    tags: ['最小可行性市場驗證', '群眾募資'],
   },
   {
     id: 2,
@@ -289,8 +289,8 @@ const awards = reactive([
     emoji: '🏆',
     image: '/3D_SP/img/umus.jpg',
     link: 'https://your-award-link.com', 
-    description: '簡短說明這個獎項的背景與你的貢獻，例如：全國設計競賽首獎，以使用者研究為核心提案。',
-    tags: ['UX Research', 'Figma', 'Presentation'],
+    description: '以循環設計思維重新詮釋中草藥的在地價值，透過使用者訪談與文獻研究，團隊梳理出循環鏈斷點，連結種植者、消費者與地方文化，並以服務設計方法提出解決方案。',
+    tags: ['循環設計', 'UX Research', '地方創生', 'Presentation', '永續議題'],
   },
   
   // 可以繼續加更多獎項...
