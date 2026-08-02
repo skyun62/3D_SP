@@ -1,4 +1,4 @@
-\<template>
+<template>
   <div class="portfolio-root" :class="{ 'is-loaded': pageLoaded }">
     <!-- ── Nav ── -->
     <nav class="nav">
@@ -48,10 +48,10 @@
           <h2 class="section-title">專案作品</h2>
         </div>
         <div class="work-grid">
+          <!-- ★ 點擊卡片直接導向 /projects/:id 內頁，不再彈出 Modal -->
           <div v-for="(project, index) in projects" :key="project.id" class="work-card"
             :style="{ animationDelay: `${index * 0.1}s` }" @click="openProject(project)">
             <div class="card-image">
-              <!-- ★ 有圖片就顯示圖片，否則 fallback 顯示色塊 + emoji -->
               <div class="card-placeholder" :style="{ background: project.color }">
                 <img v-if="project.image" :src="project.image" :alt="project.title" class="card-img" />
                 <span v-else class="card-placeholder-text">{{ project.emoji }}</span>
@@ -79,7 +79,6 @@
           <h2 class="section-title">獎項</h2>
         </div>
         <div class="awards-list">
-          <!-- 第一個獎項 -->
           <div
             v-for="(award, index) in awards"
             :key="award.id"
@@ -101,9 +100,6 @@
                 </div>
               </div>
             </div>
-            <!-- <div class="award-badge">
-              <span class="award-link-hint">VIEW →</span>
-            </div> -->
           </div>
         </div>
       </div>
@@ -121,7 +117,6 @@
               擅長從觀察中發現問題，從研究中找出脈絡，並將抽象的洞察轉化為具體的解決方案。
               <br>
               過去參與政府專案、數位產品與跨部門合作，累積了使用者研究、產品規劃與內容策略經驗。
-
             </p>
             <p class="about-body">
               我相信好的設計與產品，不只是解決問題，更來自對人的理解。
@@ -142,17 +137,7 @@
         </div>
       </div>
     </section>
-    <!-- ── Contact ── -->
-    <section class="section section--contact" id="contact">
-      <div class="container">
-        <div class="contact-inner">
-          <span class="section-label">GET IN TOUCH</span>
-          <h2 class="contact-title">合作洽談</h2>
-          <p class="contact-sub">歡迎聊聊你的專案想法</p>
-          <a href="mailto:hello@yourname.com" class="btn-accent">SEND EMAIL →</a>
-        </div>
-      </div>
-    </section>
+    
     <!-- ── Footer ── -->
     <footer class="footer">
       <span class="footer-copy">© 2026 SKY. All rights reserved.</span>
@@ -162,111 +147,31 @@
         <a href="#">GitHub</a>
       </div>
     </footer>
-    <!-- ── Modal ── -->
-    <Transition name="modal">
-      <div v-if="activeProject" class="modal-backdrop" @click.self="activeProject = null">
-        <div class="modal-panel">
-          <button class="modal-close" @click="activeProject = null">✕</button>
-
-          <!-- ★ Modal 封面：有圖片就顯示圖片，否則顯示色塊 + emoji -->
-          <div class="modal-placeholder" :style="{ background: activeProject.color }">
-            <img v-if="activeProject.image" :src="activeProject.image" :alt="activeProject.title" class="modal-img" />
-            <span v-else class="modal-emoji">{{ activeProject.emoji }}</span>
-          </div>
-
-          <div class="modal-body">
-            <span class="modal-category">{{ activeProject.category }} · {{ activeProject.year }}</span>
-            <h3 class="modal-title">{{ activeProject.title }}</h3>
-            <p class="modal-desc">{{ activeProject.description }}</p>
-            <div class="modal-tags">
-              <span v-for="tag in activeProject.tags" :key="tag" class="modal-tag">{{ tag }}</span>
-            </div>
-
-            <!-- ★ 外部連結按鈕，只有設定 link 才顯示 -->
-            <a v-if="activeProject.link" :href="activeProject.link" target="_blank" rel="noopener noreferrer"
-              class="modal-link-btn">
-              VIEW PROJECT →
-            </a>
-          </div>
-        </div>
-      </div>
-    </Transition>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { projects } from './projects.js'
+
 const router = useRouter()
 
 const pageLoaded = ref(false)
 const splineLoaded = ref(false)
 const menuOpen = ref(false)
-const activeProject = ref(null)
 
 const onSplineLoad = () => { splineLoaded.value = true }
-const openProject = (p) => { activeProject.value = p }
+
+// ★ 原本是開啟 Modal，現在改成導向專案內頁 /projects/:id
+const openProject = (project) => {
+  router.push(`/projects/${project.id}`)
+}
 
 onMounted(() => {
   setTimeout(() => { pageLoaded.value = true }, 80)
   setTimeout(() => { splineLoaded.value = true }, 10000)
 })
-
-const projects = reactive([
-  {
-    id: 1,
-    title: 'Momento郵寄遊記｜外國旅台紀念服務',
-    category: 'PRODUCT DESIGN',
-    year: '2026',
-    emoji: '🛋️',
-    color: '#e8ddd4',
-    // ★ 換成你的圖片路徑，例如 '/images/momento.jpg' 或外部網址
-    // image: '/images/momento.jpg',
-    image: '/3D_SP/img/momento.png',
-    // ★ 換成你的外部連結
-    link: 'https://reurl.cc/R28pqx',
-    description: '一款讓外國旅客在台灣旅途中記錄旅程、生成專屬明信片並寄回家鄉的個人化旅行記憶服務，此網址為高保真互動模型，探索數位與實體連結的可能性。',
-    tags: ['Figma', 'Vue 3', 'User Research', '遊記郵寄服務', '線上轉線下'],
-  },
-  {
-    id: 2,
-    title: 'CloudBOX 雲端裡的潘朵拉｜工藝觀察',
-    category: 'UIUX DESIGN．前端切版',
-    year: '2026',
-    emoji: '🌱',
-    color: '#d4e8d8',
-    // image: '/images/habitloop.jpg',
-    image: '/3D_SP/img/cloud_box.png',
-    link: 'https://skyun62.github.io/CloudBOX/',
-    description: '古老神話說，那個盒子裡裝著所有人類的苦與福。它裝著一個工匠的時間、一種瀕臨失傳的技藝、一塊泥土或一根纖維的前世今生。',
-    tags: ['User Research', 'Vue 3', 'Prototyping', 'RWD'],
-  },
-  {
-    id: 3,
-    title: '衛福部採購稽核系統｜政府大型專案建置',
-    category: 'PRODUCT DESIGN',
-    year: '2025',
-    emoji: '🎵',
-    color: '#d4d8e8',
-    // image: '/images/tidewave.jpg',
-    image: '/3D_SP/img/weifullboo_logo.jpg',
-    description: '全程參與深度需求挖掘與系統架構定義，針對不同行政層級設計「權限分流機制」，確保流程嚴謹且操作直覺。\n ✅ 因保密協議關係，僅提供內部作品集展示。',
-    tags: ['Design System', 'Axure RP', 'User Research','CMS', '流程無紙化'],
-  },
-  {
-    id: 4,
-    title: '洲際棒球場官網｜網頁改版',
-    category: 'SIDE PROJECT．RWD',
-    year: '2025',
-    emoji: '💡',
-    color: '#e8e4d4',
-    // image: '/images/luminary.jpg',
-    image: '/3D_SP/img/bsball.png',
-    link: 'https://fcu-11410-tibs.dev-hub.io/',
-    description: '重新針對不同客戶進行全新改版，以提升場地租借率與改善用戶體驗。',
-    tags: ['Figma', 'Vue 3', 'User Research', 'Design System', 'Business Website'],
-  },
-])
 
 const skills = reactive(['UI/UX Design', 'Figma', 'Vue 3', 'Spline 3D', 'User Research', 'Prototyping', 'Design System'])
 const awards = reactive([
@@ -276,8 +181,8 @@ const awards = reactive([
     category: 'COMPETITION',
     year: '2022',
     emoji: '🏆',
-    image: '/3D_SP/img/zzmz.png',  // ← 換成你的圖片路徑
-    link: 'https://your-award-link.com',   // ← 換成你的連結
+    image: '/3D_SP/img/zzmz.png',
+    link: 'https://your-award-link.com',
     description: '經過長達一年多的顧客調研與競賽，將產品順利產出並成功上架平台。',
     tags: ['最小可行性市場驗證', '群眾募資'],
   },
@@ -288,12 +193,10 @@ const awards = reactive([
     year: '2021-2022',
     emoji: '🏆',
     image: '/3D_SP/img/umus.jpg',
-    link: 'https://your-award-link.com', 
+    link: 'https://your-award-link.com',
     description: '以循環設計思維重新詮釋中草藥的在地價值，透過使用者訪談與文獻研究，團隊梳理出循環鏈斷點，連結種植者、消費者與地方文化，並以服務設計方法提出解決方案。',
     tags: ['循環設計', 'UX Research', '地方創生', 'Presentation', '永續議題'],
   },
-  
-  // 可以繼續加更多獎項...
 ])
 const stats = reactive([{ number: '20+', label: 'Projects' }, { number: '3yr', label: 'Experience' }, { number: '100%', label: 'Passion' }])
 </script>
@@ -673,7 +576,6 @@ body {
   transform: scale(1.03);
 }
 
-/* ★ 圖片樣式：填滿色塊區域 */
 .card-img {
   width: 100%;
   height: 100%;
@@ -764,10 +666,6 @@ body {
   transition: background var(--transition);
   cursor: pointer;
 }
-
-/* .award-row:first-child {
-  border-top: 1px solid var(--color-border);
-} */
 
 .award-row:hover {
   background: var(--color-bg-card);
@@ -860,34 +758,6 @@ body {
   padding: 3px 10px;
 }
 
-.award-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-.award-prize {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--color-text-primary);
-  white-space: nowrap;
-}
-
-.award-link-hint {
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: var(--color-text-secondary);
-  transition: color var(--transition);
-}
-
-.award-row:hover .award-link-hint {
-  color: var(--color-accent);
-}
-
-/* Awards 響應式 */
 @media (max-width: 768px) {
   .award-row {
     grid-template-columns: 100px 1fr;
@@ -897,14 +767,6 @@ body {
   .award-cover {
     width: 100px;
     height: 70px;
-  }
-
-  .award-badge {
-    grid-column: 1 / -1;
-    flex-direction: row;
-    justify-content: space-between;
-    border-top: 1px solid var(--color-border);
-    padding-top: 12px;
   }
 
   .award-row:hover {
@@ -987,47 +849,6 @@ body {
   color: var(--color-text-secondary);
 }
 
-/* ── Contact ── */
-.section--contact {
-  text-align: center;
-}
-
-.contact-inner {
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.contact-title {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 5vw, 64px);
-  font-weight: 400;
-  margin: 16px 0 12px;
-}
-
-.contact-sub {
-  font-size: 15px;
-  color: var(--color-text-secondary);
-  margin-bottom: 40px;
-  line-height: 1.7;
-}
-
-.btn-accent {
-  display: inline-block;
-  background: var(--color-accent);
-  color: #fff;
-  border: 1px solid var(--color-accent);
-  padding: 14px 40px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-family: var(--font-body);
-  text-decoration: none;
-  transition: opacity var(--transition);
-}
-
-.btn-accent:hover {
-  opacity: 0.82;
-}
 
 /* ── Footer ── */
 .footer {
@@ -1060,154 +881,6 @@ body {
 
 .footer-links a:hover {
   color: var(--color-accent);
-}
-
-/* ── Modal ── */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 300;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  backdrop-filter: blur(4px);
-}
-
-.modal-panel {
-  background: var(--color-bg);
-  width: 100%;
-  max-width: 580px;
-  border: 1px solid var(--color-border);
-  position: relative;
-  overflow: hidden;
-}
-
-.modal-close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-  color: var(--color-text-secondary);
-  z-index: 10;
-  transition: color var(--transition);
-}
-
-.modal-close:hover {
-  color: var(--color-accent);
-}
-
-.modal-placeholder {
-  width: 100%;
-  height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-/* ★ Modal 圖片樣式 */
-.modal-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.modal-emoji {
-  font-size: 80px;
-}
-
-.modal-body {
-  padding: 32px;
-}
-
-.modal-category {
-  display: block;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--color-accent);
-  margin-bottom: 12px;
-}
-
-.modal-title {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 400;
-  margin-bottom: 16px;
-  line-height: 1.3;
-}
-
-.modal-desc {
-  font-size: 15px;
-  line-height: 1.75;
-  color: var(--color-text-secondary);
-  margin-bottom: 24px;
-  white-space: pre-line;
-}
-
-.modal-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 28px;
-}
-
-.modal-tag {
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
-  padding: 5px 12px;
-}
-
-/* ★ 外部連結按鈕樣式 */
-.modal-link-btn {
-  display: inline-block;
-  background: transparent;
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-text-primary);
-  padding: 12px 32px;
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-family: var(--font-body);
-  text-decoration: none;
-  transition: background var(--transition), color var(--transition);
-}
-
-.modal-link-btn:hover {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-  color: #fff;
-}
-
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-active .modal-panel,
-.modal-leave-active .modal-panel {
-  transition: transform 0.25s ease;
-}
-
-.modal-enter-from .modal-panel {
-  transform: translateY(20px);
-}
-
-.modal-leave-to .modal-panel {
-  transform: translateY(10px);
 }
 
 /* ── 響應式 768px ── */
@@ -1276,16 +949,6 @@ body {
   .section-header {
     flex-direction: column;
     gap: 8px;
-  }
-
-  .modal-backdrop {
-    padding: 16px;
-    align-items: flex-end;
-  }
-
-  .modal-panel {
-    max-height: 90vh;
-    overflow-y: auto;
   }
 
   .footer {
