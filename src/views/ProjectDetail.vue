@@ -113,9 +113,9 @@ function isVideoFile(src) {
 // 每個 timeline 項目可以在 projects.js 裡加一個 group 欄位（'process' / 'flow' / 'ai'）
 // 沒有標註 group 的項目，預設歸類為 'process'（製作歷程），維持向下相容，其他專案完全不用改
 const TIMELINE_GROUPS = [
-  { key: 'flow', label: 'USER FLOW', title: '使用者歷程' },
+  { key: 'flow', label: 'USER FLOW', title: '使用者旅程' },
   { key: 'strategy', label: 'DESIGN STRATEGY', title: '設計策略' },
-  { key: 'process', label: 'PROCESS', title: '歷程與客群定位' },
+  { key: 'process', label: 'PROCESS', title: '歷程' },
   { key: 'ai', label: 'AI TOOLS', title: 'AI 工具應用' },
 ]
 
