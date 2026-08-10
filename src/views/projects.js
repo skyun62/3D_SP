@@ -101,7 +101,7 @@ export const projects = [
       },
       {
         stage: 'AI工具應用｜claude、gemini、midjourney',
-        image: '/3D_SP/img/momento.png',
+        image: '/3D_SP/img/cloud_box.png',
         text: '1️⃣與gemini進行開發構想與文案故事設計\n2️⃣claude協助切版code\n3️⃣midjourney用於創建視覺素材，提供相關圖片\n4️⃣最終使用Vue3實現前端開發',
       },
     ],
