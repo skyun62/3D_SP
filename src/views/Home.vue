@@ -49,13 +49,6 @@ import PortfolioHome from './PortfolioHome.vue'
           </div>
         </div>
         <div class="hero-fade"></div>
-
-        <!-- ── 開場散開動畫：雲朵、實驗瓶、畫筆、花朵，隨滾動散開淡出 ── -->
-        <div class="intro-objects" :class="{ 'is-done': introDone }" aria-hidden="true">
-          <div v-for="(obj, i) in introObjects" :key="i" class="intro-object" :style="objectStyle(obj)">
-            <img :src="obj.src" :alt="obj.type" class="intro-object-img" />
-          </div>
-        </div>
       </section>
     </div>
 
@@ -172,16 +165,15 @@ import PortfolioHome from './PortfolioHome.vue'
     <footer class="footer">
       <span class="footer-copy">© 2026 SKY. All rights reserved.</span>
       <div class="footer-links">
-        <a href="#">104</a>
-        <a href="#">LinkedIn</a>
-        <a href="#">GitHub</a>
+        <a href="https://pda.104.com.tw/profile/share/dk7VMjPfvQs6B2648b7BWBBKFizlky99">104</a>
+        <a href="https://github.com/skyun62">GitHub</a>
       </div>
     </footer>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { projects } from './projects.js'
 
@@ -197,89 +189,12 @@ const openProject = (project) => {
   router.push(`/projects/${project.id}`)
 }
 
-/* ── 開場散開動畫 ──
-   scrollProgress: 0（畫面剛打開，物件佈滿中央）→ 1（滾到觸發距離，物件完全散開淡出）
-   TRIGGER_RATIO 控制要滾多少距離（相對於視窗高度）才會完全散開 */
-const scrollProgress = ref(0)
-const TRIGGER_RATIO = 0.9
-
-const updateScrollProgress = () => {
-  const vh = window.innerHeight || 1
-  const raw = window.scrollY / (vh * TRIGGER_RATIO)
-  scrollProgress.value = Math.min(1, Math.max(0, raw))
-}
-
-let ticking = false
-const onScroll = () => {
-  if (ticking) return
-  ticking = true
-  window.requestAnimationFrame(() => {
-    updateScrollProgress()
-    ticking = false
-  })
-}
-
-// 每個開場物件的設定：
-// src 是圖片路徑（放在 public 資料夾下，例如 /3D_SP/img/intro/cloud-1.png）
-// top/left 是初始位置（相對於畫面的 %），size 是尺寸(px)
-// dx/dy 是散開後移動的距離（vw / vh），正值往右／往下，負值往左／往上
-// rotate 是散開時額外旋轉的角度，delay 讓不同物件散開的時間點錯開一點，不要整齊劃一
-//
-// ★ 圖片路徑目前是佔位路徑，請換成你實際的雲朵/實驗瓶/畫筆/花朵圖片
-//   建議統一放在 public/3D_SP/img/intro/ 資料夾下，透明背景的 PNG 效果最好
-const introObjects = reactive([
-  { type: 'cloud', src: '/3D_SP/img/cloud.png', top: '14%', left: '16%', size: 96, dx: -62, dy: -8, rotate: -8, delay: 0 },
-  { type: 'cloud', src: '/3D_SP/img/intro/cloud-2.png', top: '20%', left: '66%', size: 112, dx: 72, dy: -6, rotate: 6, delay: 0.02 },
-  { type: 'cloud', src: '/3D_SP/img/intro/cloud-3.png', top: '58%', left: '10%', size: 84, dx: -78, dy: 14, rotate: -4, delay: 0.05 },
-  { type: 'cloud', src: '/3D_SP/img/intro/cloud-1.png', top: '64%', left: '76%', size: 100, dx: 86, dy: 10, rotate: 5, delay: 0.03 },
-  { type: 'cloud', src: '/3D_SP/img/intro/cloud-2.png', top: '38%', left: '44%', size: 72, dx: 12, dy: -42, rotate: 2, delay: 0.08 },
-  { type: 'flask', src: '/3D_SP/img/intro/flask-1.png', top: '30%', left: '30%', size: 80, dx: -55, dy: 32, rotate: -12, delay: 0.04 },
-  { type: 'flask', src: '/3D_SP/img/intro/flask-2.png', top: '48%', left: '60%', size: 76, dx: 62, dy: -30, rotate: 10, delay: 0.06 },
-  { type: 'brush', src: '/3D_SP/img/intro/brush-1.png', top: '20%', left: '48%', size: 88, dx: -22, dy: -58, rotate: -18, delay: 0.01 },
-  { type: 'brush', src: '/3D_SP/img/intro/brush-2.png', top: '70%', left: '42%', size: 84, dx: 26, dy: 56, rotate: 16, delay: 0.07 },
-  { type: 'flower', src: '/3D_SP/img/intro/flower-1.png', top: '14%', left: '80%', size: 72, dx: 66, dy: -22, rotate: 20, delay: 0.03 },
-  { type: 'flower', src: '/3D_SP/img/intro/flower-2.png', top: '76%', left: '20%', size: 68, dx: -62, dy: 24, rotate: -14, delay: 0.05 },
-  { type: 'flower', src: '/3D_SP/img/intro/flower-3.png', top: '50%', left: '86%', size: 64, dx: 72, dy: 8, rotate: 10, delay: 0.02 },
-])
-
-// 依照 scrollProgress 計算每個物件當下的 transform / opacity
-// delay 讓物件不會同時開始動，越晚開始散開的物件，動畫區間會被壓縮到剩餘的滾動距離裡
-const objectStyle = (obj) => {
-  const local = Math.max(0, Math.min(1, (scrollProgress.value - obj.delay) / (1 - obj.delay)))
-  const translateX = obj.dx * local
-  const translateY = obj.dy * local
-  const rotate = obj.rotate * local
-  const opacity = 1 - local
-  const scale = 1 - local * 0.25
-  return {
-    top: obj.top,
-    left: obj.left,
-    width: `${obj.size}px`,
-    height: `${obj.size}px`,
-    transform: `translate(${translateX}vw, ${translateY}vh) rotate(${rotate}deg) scale(${scale})`,
-    opacity,
-  }
-}
-
-const introDone = ref(false)
-
 onMounted(() => {
   setTimeout(() => { pageLoaded.value = true }, 80)
   setTimeout(() => { splineLoaded.value = true }, 10000)
-  updateScrollProgress()
-  window.addEventListener('scroll', onScroll, { passive: true })
 })
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', onScroll)
-})
-
-// scrollProgress 到 1 之後，把整層開場物件藏起來（避免殘留在 DOM 擋到操作／被讀屏軟體念到）
-watch(scrollProgress, (val) => {
-  introDone.value = val >= 1
-})
-
-const skills = reactive(['UI/UX Design', 'Figma', 'Vue 3', 'Spline 3D', 'User Research', 'Prototyping', 'Design System'])
+const skills = reactive(['UI/UX Design', 'Figma', 'Vue 3', 'User Research', 'Prototyping', 'Design System'])
 const awards = reactive([
   {
     id: 1,
@@ -606,32 +521,6 @@ body {
   z-index: 15;
   background: linear-gradient(to bottom, transparent, var(--color-bg));
   pointer-events: none;
-}
-
-/* ── 開場散開物件：蓋在 Spline 場景上方，散開後淡出，露出下面的畫面 ── */
-.intro-objects {
-  position: absolute;
-  inset: 0;
-  z-index: 40;
-  pointer-events: none;
-}
-
-.intro-objects.is-done {
-  visibility: hidden;
-}
-
-.intro-object {
-  position: absolute;
-  will-change: transform, opacity;
-}
-
-.intro-object-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  pointer-events: none;
-  user-select: none;
 }
 
 /* ── Section 通用 ── */
@@ -1118,11 +1007,6 @@ body {
 
   .footer {
     padding: 0 32px;
-  }
-
-  /* 手機螢幕較窄，物件散開距離縮小，避免飛出畫面太誇張 */
-  .intro-object {
-    transform-origin: center;
   }
 }
 

@@ -417,8 +417,8 @@ onMounted(() => {
 }
 
 .timeline-image {
-  aspect-ratio: 4/3;
-  overflow: hidden;
+  aspect-ratio: 4.5/3;
+  /* overflow: hidden; */
   border: 1px solid var(--color-border);
   display: flex;
   align-items: center;
